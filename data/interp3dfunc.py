@@ -43,6 +43,14 @@ def interp_plot(x, y, z, graph_title='Graph', interp_type='linear'):
     ax1.set(title=graph_title, xlabel='X Axis', ylabel='Y Axis', zlabel='Z Axis')
 
     plt.figure()
+    ax2 = plt.axes([0.05, 0.05, 0.9, 0.9], projection='3d')  # Define a superfície
+    surface = ax2.plot_surface(XXnew, YYnew, znew, rstride=1,
+                               cstride=1, cmap='jet',
+                               linewidth=0.25)  # Plota a superfície adicionando a ela seu mapa de calor
+    ax2.set(title=graph_title, xlabel='X Axis', ylabel='Y Axis', zlabel='Z Axis')
+    plt.colorbar(surface, shrink=0.5, aspect=5)
+
+    plt.figure()
     plt.contourf(x, y, z, cmap='jet')  # Plota o mapa de contorno da função
     plt.colorbar()  # Adiciona uma barra de calor ao gráfico
     plt.title("{}  - Contours".format(graph_title))

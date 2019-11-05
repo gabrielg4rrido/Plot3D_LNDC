@@ -59,7 +59,6 @@ surface.update_layout(title='Graph', margin=dict(l=65, r=50, b=90, t=90))
                   #scene_camera_eye=dict(x=1.87, y=0.88, z=-0.64),
                   #margin=dict(l=65, r=50, b=65, t=90))
 
-contour = go.Figure(data = [go.Contour(x=x, y=y, z=z, colorscale="Jet")])
+#contour = go.Figure(data = [go.Contour(x=x, y=y, z=z, colorscale="Jet")])
 
-interp3dfunc.interp_plot(x, y, z)
 interp_plotly(surface)
