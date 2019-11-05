@@ -3,12 +3,15 @@ import scipy.interpolate as interp
 import numpy as np
 import mpl_toolkits.mplot3d
 import time
+import matplotlib
 from pylab import rcParams
+import sys, os
+import plotly.offline
+
 
 """
     Recebe como parâmetros x e y, arrays que definem os pontos coordenados usados para aproximar 
-    uma função f = z(x,y) e, por fim, plota na tela o gráfico em 3D de sua superfície, seu mapa de calor e seu mapa de contorno.    
-
+    uma função f = z(x,y) e, por fim, plota na tela o gráfico em 3D de sua superfície, seu mapa de calor e seu mapa de contorno.
 """
 
 def interp_plot(x, y, z, graph_title='Graph', interp_type='linear'):
@@ -38,11 +41,6 @@ def interp_plot(x, y, z, graph_title='Graph', interp_type='linear'):
     ax1 = plt.axes([0.05, 0.05, 0.9, 0.9], projection='3d')  # Cria e define os limites da superfície superfície
     ax1.plot_surface(XX, YY, z)  # Plota a superfície
     ax1.set(title=graph_title, xlabel='X Axis', ylabel='Y Axis', zlabel='Z Axis')
- 
-    plt.figure()
-    ax2 = plt.axes([0.05, 0.05, 0.9, 0.9], projection='3d')  # Cria e define os limites da superfície
-    ax2.plot_surface(XXnew, YYnew, znew, rstride=1, cstride=1, cmap='jet', linewidth=0.25) # Plota a superfície 
-    ax2.set(title=graph_title, xlabel='X Axis', ylabel='Y Axis', zlabel='Z Axis')
 
     plt.figure()
     plt.contourf(x, y, z, cmap='jet')  # Plota o mapa de contorno da função
@@ -52,4 +50,18 @@ def interp_plot(x, y, z, graph_title='Graph', interp_type='linear'):
 
     end = time.time()
     print("Tempo de execução: {}".format(end - begin))
-    
+
+
+def interp_plotly(fig):
+    from PyQt5.QtCore import QUrl
+    from PyQt5.QtWebEngineWidgets import QWebEngineView
+    from PyQt5.QtWidgets import QApplication
+
+    plotly.offline.plot(fig, filename='graph_plot.html', auto_open=False)
+
+    app = QApplication(sys.argv)
+    web = QWebEngineView()
+    file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "name.html"))
+    web.load(QUrl.fromLocalFile(file_path))
+    web.show()
+    sys.exit(app.exec_())
