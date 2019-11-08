@@ -1,3 +1,4 @@
+from pylab import rcParams
 import matplotlib.pyplot as plt
 import plotly.graph_objs as go
 import plotly.subplots
@@ -7,7 +8,6 @@ import mpl_toolkits.mplot3d
 import time
 import sys, os
 import plotly.offline
-from pylab import rcParams
 import matplotlib
 
 
