@@ -31,5 +31,5 @@ y = list(range(rotVal[0], rotVal[1]+1, rotVal[2]))
 z = dataArray
 
 
-interp_plot_funcs.plot_window_plotly(x, y, z, title='Plot 3D', smooth=True)
+interp_plot_funcs.plot_window_plotly(x, y, z, title='Plot 3D', smooth=False)
 #interp_plot_funcs.interp_plot(x, y, z)

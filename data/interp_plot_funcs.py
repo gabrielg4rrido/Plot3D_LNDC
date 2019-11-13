@@ -70,7 +70,7 @@ def plot_window_plotly(x, y, z, c1='blues', c2='jet', smooth=True, title='Graph'
 
     fig = plotly.subplots.make_subplots(rows=2, cols=2,
                                         specs=[[{'type' : 'surface'}, {'type' : 'surface'}],
-                                                [{'type' : 'contour'}, {'type' : 'heatmap' }]])
+                                                [{'type' : 'heatmap'}, {'type' : 'heatmap'}]])
 
     fig.add_trace(go.Surface(x=x, y=y, z=z, colorscale=c1, showscale=False), row=1, col=1)
     fig.update_traces(contours_z=dict(show=True, usecolormap=True, highlightcolor="limegreen", project_z=True))
@@ -84,7 +84,7 @@ def plot_window_plotly(x, y, z, c1='blues', c2='jet', smooth=True, title='Graph'
         fig.add_trace(go.Contour(x=x, y=y, z=z, colorscale=c1, showscale=False, line_width=0), row=2, col=1)
         fig.add_trace(go.Contour(x=x, y=y, z=z, colorscale=c2, showscale=False, line_width=0), row=2, col=2)
 
-    fig.update_layout(title=title,  margin=dict(l=65, r=50, b=65, t=90), height=800, width=1000)
+    fig.update_layout(title=title, margin=dict(l=65, r=50, b=65, t=90), height=800, width=1000)
 
 
     plotly.offline.plot(fig, filename='graph_plot.html', auto_open=False)
@@ -93,6 +93,7 @@ def plot_window_plotly(x, y, z, c1='blues', c2='jet', smooth=True, title='Graph'
     web = QWebEngineView()
     file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "graph_plot.html"))
     web.load(QUrl.fromLocalFile(file_path))
+    web.setWindowTitle('PLOT 3D - LNDC')
     web.resize(1050, 850)
     web.show()
     sys.exit(app.exec_())
