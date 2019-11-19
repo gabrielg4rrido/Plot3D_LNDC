@@ -16,7 +16,7 @@ import matplotlib
     uma função f = z(x,y) e, por fim, plota na tela o gráfico em 3D de sua superfície, seu mapa de calor e seu mapa de contorno.
 """
 
-def interp_plot(x, y, z, graph_title='Graph', interp_type='linear'):
+def plot_matplot(x, y, z, graph_title='Graph', interp_type='linear'):
     rcParams['figure.figsize'] = (8, 6)  # Define o tamanho da figura do gráfico
     begin = time.time()
     matplotlib.use('qt5agg')
@@ -62,11 +62,16 @@ def interp_plot(x, y, z, graph_title='Graph', interp_type='linear'):
     print("Tempo de execução: {}".format(end - begin))
 
 
+"""
+    Recebe como parâmetros x, y e z (arrays), c1 e c2 (escalas de cores), além de um booleano que define a suavidade do mapa de calor e uma string que define o título do gráfico.
+    Por fim, plota na tela o gráfico em 3D de sua superfície e seu mapa de calor.
+"""
 
 def plot_window_plotly(x, y, z, c1='blues', c2='jet', smooth=True, title='Graph'):
     from PyQt5.QtCore import QUrl
     from PyQt5.QtWebEngineWidgets import QWebEngineView
-    from PyQt5.QtWidgets import QApplication
+    from PyQt5.QtWidgets import QApplication, QPushButton
+    from PyQt5.QtGui import QIcon
 
     fig = plotly.subplots.make_subplots(rows=2, cols=2,
                                         specs=[[{'type' : 'surface'}, {'type' : 'surface'}],
@@ -94,6 +99,7 @@ def plot_window_plotly(x, y, z, c1='blues', c2='jet', smooth=True, title='Graph'
     file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "graph_plot.html"))
     web.load(QUrl.fromLocalFile(file_path))
     web.setWindowTitle('PLOT 3D - LNDC')
-    web.resize(1050, 850)
+    web.setGeometry(500, 150, 1050, 800)
+    web.setWindowIcon(QIcon('lndc.jpg'))
     web.show()
     sys.exit(app.exec_())
