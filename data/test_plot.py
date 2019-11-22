@@ -1,5 +1,6 @@
 import numpy as np
-import  plot_funcs
+import plot_funcs
+import PlotlyViwer
 
 nomeArq = 'EstudoAntigo2_difAmpZ.txt'
 cabecalho = 15
@@ -31,5 +32,5 @@ y = list(range(rotVal[0], rotVal[1]+1, rotVal[2]))
 z = dataArray
 
 
-plot_funcs.plot_window_plotly(x, y, z, title='Plot 3D', smooth=True)
+plot_funcs.plot_window_plotly(x, y, z, title='Plot 3D', smooth=False)
 #interp_plot_funcs.plot_matplot(x, y, z)
