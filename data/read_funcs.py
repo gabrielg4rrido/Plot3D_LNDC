@@ -1,9 +1,10 @@
 import numpy as np
 
+
 ### Lê dados de arquivos do Lucas
 def read_arq1():
 
-    with open(r'C:\Users\gabri\PycharmProjects\PLOT3D_LNDC\data\dados_lucas\EstudoAntigo2_difAmpZ.txt', 'r') as in_file:
+    with open(r'C:\Users\gabriel.garrido\PycharmProjects\PLOT3D_LNDC\data\dados_lucas\EstudoAntigo2_difAmpZ.txt', 'r') as in_file:
         cabecalho = 15
         data_array = []
 
@@ -32,13 +33,23 @@ def read_arq1():
 
         return x, y, z
 
+
 ### Lê dados de arquivos do Vitor - B/H
 def read_arq2():
+    # Listas onde os valores de B e H serão armazenados como strings, convertidos em float e a lista se tornará um NumpyArray
     data_arrayB = []
     data_arrayH = []
-    data_arrayT = np.ndarray([10201, 1])
 
-    with open(r'C:\Users\gabri\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\B_Yoke_ima_lab_V5.txt', 'r') as in_file:
+    # NumpyArray onde os valores de permeabilidade magnética (B/H) serão armazenados
+    data_arrayPM = np.ndarray([10201, 1])
+
+    # Leitura e armazenamento dos valores de B
+    with open(r'C:\Users\gabriel.garrido\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\B_Yoke_ima_lab_V5.txt',
+              'r') as in_file:
+        # Lê as primeiras nove linhas de comentários e ignora
+        for linha in range(9):
+            in_file.readline()
+
         for linha in in_file:
             string_data = linha.split()
             values_data = [float(v) for v in string_data]
@@ -46,7 +57,13 @@ def read_arq2():
 
         data_arrayB = np.array(data_arrayB, dtype='float')
 
-    with open(r'C:\Users\gabri\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\H_Yoke_ima_lab_V5.txt', 'r') as in_file:
+    # Leitura e armazenamento dos valores de H
+    with open(r'C:\Users\gabriel.garrido\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\H_Yoke_ima_lab_V5.txt',
+              'r') as in_file:
+        # Lê as primeiras nove linhas de comentários e ignora
+        for linha in range(9):
+            in_file.readline()
+
         for linha in in_file:
             string_data = linha.split()
             values_data = [float(v) for v in string_data]
@@ -54,26 +71,21 @@ def read_arq2():
 
         data_arrayH = np.array(data_arrayH, dtype='float')
 
+    # Leitura e armazenamento dos valores de B/H
     for i in range(len(data_arrayB)):
-        data_arrayT[i][0] = data_arrayB[i][2]/data_arrayH[i][2]
+        data_arrayPM[i][0] = data_arrayB[i][2] / data_arrayH[i][2]
 
-    for i in range(len(data_arrayT)):
-        data_arrayT[i][0] /= 4 * np.pi * 10E-7
+    for i in range(len(data_arrayPM)):
+        data_arrayPM[i][0] /= 4 * np.pi * 10E-7
 
-    np.savetxt(r'data\dados_vitor\perm_mag\Resultados.txt', X = data_arrayT, newline='\n')
+    return data_arrayB * 10E2, data_arrayPM
 
-    x = data_arrayB[:, 0] * 10E2
-    y = data_arrayB[:, 1] * 10E2
-    z = data_arrayT
-    print(x.shape, y.shape, z.shape)
-
-    return x, y, z
 
 ### Lê dados de arquivos do Vitor - B
 def read_arq3():
     data_arrayB = []
 
-    with open(r'C:\Users\gabri\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\B_Yoke_ima_lab_V5.txt', 'r') as in_file:
+    with open(r'C:\Users\gabriel.garrido\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\B_Yoke_ima_lab_V5.txt', 'r') as in_file:
         for linha in in_file:
             string_data = linha.split()
             values_data = [float(v) for v in string_data]
@@ -89,10 +101,11 @@ def read_arq3():
 
         return x, y, z
 
+### Lê dados de arquivos do Vitor - H
 def read_arq4():
     data_arrayH = []
 
-    with open(r'C:\Users\gabri\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\H_Yoke_ima_lab_V5.txt', 'r') as in_file:
+    with open(r'C:\Users\gabriel.garrido\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\H_Yoke_ima_lab_V5.txt', 'r') as in_file:
         for linha in in_file:
             string_data = linha.split()
             values_data = [float(v) for v in string_data]
@@ -107,4 +120,3 @@ def read_arq4():
         z = aux[:, 2]
 
         return x, y, z
-

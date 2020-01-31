@@ -4,12 +4,11 @@ import plotly.graph_objs as go
 import plotly.subplots
 from scipy import interpolate
 import numpy as np
-import mpl_toolkits.mplot3d
 import time
 import sys, os
 import plotly.offline
 import matplotlib
-
+import mpl_toolkits.mplot3d
 
 """
     Recebe como parâmetros x e y, arrays que definem os pontos coordenados usados para aproximar 
@@ -72,11 +71,6 @@ def plot_plotly(x, y, z, c='jet', smooth=True, title='Graph'):
 
     begin = time.time()
 
-    # Iguala o shape dos arrays
-    # XX = matriz onde todas as linhas são iguais ao array X
-    # YY = matriz onde todas as colunas são iguais ao array Y
-    XX, YY = np.meshgrid(x, y)
-
     f = interpolate.interp2d(x, y, z, kind='linear')
     n_points = 100
 
@@ -103,7 +97,7 @@ def plot_plotly(x, y, z, c='jet', smooth=True, title='Graph'):
     else:
         fig.add_trace(go.Contour(x=x_new, y=y_new, z=z_new, colorscale=c, showscale=False, line_width=0), row=1, col=2)
 
-    fig.update_layout(title=title, margin=dict(l=65, r=50, b=65, t=90), height=900, width=1250)
+    fig.update_layout(title=title, margin=dict(l=65, r=50, b=65, t=90), height=750, width=1250)
 
     fig.show()
 
