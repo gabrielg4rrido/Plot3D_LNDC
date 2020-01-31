@@ -38,7 +38,7 @@ def read_arq2():
     data_arrayH = []
     data_arrayT = np.ndarray([10201, 1])
 
-    with open(r'C:\Users\gabriel.garrido\Desktop\dados_vitor_permeabilidade\B_Yoke_ima_lab_V5.txt', 'r') as in_file:
+    with open(r'C:\Users\gabri\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\B_Yoke_ima_lab_V5.txt', 'r') as in_file:
         for linha in in_file:
             string_data = linha.split()
             values_data = [float(v) for v in string_data]
@@ -46,7 +46,7 @@ def read_arq2():
 
         data_arrayB = np.array(data_arrayB, dtype='float')
 
-    with open(r'C:\Users\gabriel.garrido\Desktop\dados_vitor_permeabilidade\H_Yoke_ima_lab_V5.txt', 'r') as in_file:
+    with open(r'C:\Users\gabri\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\H_Yoke_ima_lab_V5.txt', 'r') as in_file:
         for linha in in_file:
             string_data = linha.split()
             values_data = [float(v) for v in string_data]
@@ -60,7 +60,14 @@ def read_arq2():
     for i in range(len(data_arrayT)):
         data_arrayT[i][0] /= 4 * np.pi * 10E-7
 
-    return data_arrayB[:, 2], data_arrayH[:, 2], data_arrayT
+    np.savetxt(r'data\dados_vitor\perm_mag\Resultados.txt', X = data_arrayT, newline='\n')
+
+    x = data_arrayB[:, 0] * 10E2
+    y = data_arrayB[:, 1] * 10E2
+    z = data_arrayT
+    print(x.shape, y.shape, z.shape)
+
+    return x, y, z
 
 ### Lê dados de arquivos do Vitor - B
 def read_arq3():
@@ -78,6 +85,25 @@ def read_arq3():
 
         x = data_arrayB[:, 0]
         y = data_arrayB[:, 1]
+        z = aux[:, 2]
+
+        return x, y, z
+
+def read_arq4():
+    data_arrayH = []
+
+    with open(r'C:\Users\gabri\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\H_Yoke_ima_lab_V5.txt', 'r') as in_file:
+        for linha in in_file:
+            string_data = linha.split()
+            values_data = [float(v) for v in string_data]
+            data_arrayH.append(values_data)
+
+        data_arrayH = np.array(data_arrayH, dtype='float')
+        aux = data_arrayH
+        data_arrayH = data_arrayH[:, 0:2] * 10E2
+
+        x = data_arrayH[:, 0]
+        y = data_arrayH[:, 1]
         z = aux[:, 2]
 
         return x, y, z

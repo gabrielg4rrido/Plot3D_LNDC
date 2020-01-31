@@ -103,7 +103,7 @@ def plot_plotly(x, y, z, c='jet', smooth=True, title='Graph'):
     else:
         fig.add_trace(go.Contour(x=x_new, y=y_new, z=z_new, colorscale=c, showscale=False, line_width=0), row=1, col=2)
 
-    fig.update_layout(title=title, margin=dict(l=65, r=50, b=65, t=90), height=800, width=1000)
+    fig.update_layout(title=title, margin=dict(l=65, r=50, b=65, t=90), height=900, width=1250)
 
     fig.show()
 
