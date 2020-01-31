@@ -2,7 +2,7 @@ from pylab import rcParams
 import matplotlib.pyplot as plt
 import plotly.graph_objs as go
 import plotly.subplots
-import scipy.interpolate as interp
+from scipy import interpolate
 import numpy as np
 import mpl_toolkits.mplot3d
 import time
@@ -26,19 +26,19 @@ def plot_matplot(x, y, z, graph_title='Graph', interp_type='linear'):
     # YY = matriz onde todas as colunas são iguais ao array Y
     XX, YY = np.meshgrid(x, y)  
 
-    f = interp.interp2d(x, y, z, kind=interp_type)
+    f = interpolate.interp2d(x, y, z, kind=interp_type)
     n_points = 500
 
     # Cria um array ordenado igualmente espaçado de tamanho = n_points no intervalo [menor valor(x), maior valor(x)]
-    xnew = np.linspace(start=min(x), stop=max(x), num=n_points)
+    x_new = np.linspace(start=min(x), stop=max(x), num=n_points)
 
     # Cria um array ordenado igualmente espaçado de tamanho = n_points no intervalo [menor valor(y), maior valor(y)]
-    ynew = np.linspace(start=min(y), stop=max(y), num=n_points)  
+    y_new = np.linspace(start=min(y), stop=max(y), num=n_points)
     
-    # Obtém os pontos de z através da função interpolada e dos pontos coordenados criados por xnew e ynew
-    znew = f(xnew, ynew)
+    # Obtém os pontos de z através da função interpolada e dos pontos coordenados criados por x_new e y_new
+    z_new = f(x_new, y_new)
 
-    XXnew, YYnew = np.meshgrid(xnew, ynew)
+    XX_new, YY_new = np.meshgrid(x_new, y_new)
 
     plt.figure()
     ax1 = plt.axes([0.05, 0.05, 0.9, 0.9], projection='3d')  # Cria e define os limites da superfície superfície
@@ -47,7 +47,7 @@ def plot_matplot(x, y, z, graph_title='Graph', interp_type='linear'):
 
     plt.figure()
     ax2 = plt.axes([0.05, 0.05, 0.9, 0.9], projection='3d')  # Define a superfície
-    surface = ax2.plot_surface(XXnew, YYnew, znew, rstride=1,
+    surface = ax2.plot_surface(XX_new, YY_new, z_new, rstride=1,
                                cstride=1, cmap='jet', linewidth=0.25)  # Plota a superfície adicionando a ela seu mapa de calor
     ax2.set(title=graph_title, xlabel='X Axis', ylabel='Y Axis', zlabel='Z Axis')
     plt.colorbar(surface, shrink=0.5, aspect=5)
@@ -62,10 +62,55 @@ def plot_matplot(x, y, z, graph_title='Graph', interp_type='linear'):
     print("Tempo de execução: {}".format(end - begin))
 
 
+
 """
-    Recebe como parâmetros x, y e z (arrays), c1 e c2 (escalas de cores), além de um booleano que define a suavidade do mapa de calor e uma string que define o título do gráfico.
+    Recebe como parâmetros x, y e z (arrays), c1 e c (escalas de cores), além de um booleano que define a suavidade do mapa de calor e uma string que define o título do gráfico.
     Por fim, plota na tela o gráfico em 3D de sua superfície e seu mapa de calor.
 """
+
+def plot_plotly(x, y, z, c='jet', smooth=True, title='Graph'):
+
+    begin = time.time()
+
+    # Iguala o shape dos arrays
+    # XX = matriz onde todas as linhas são iguais ao array X
+    # YY = matriz onde todas as colunas são iguais ao array Y
+    XX, YY = np.meshgrid(x, y)
+
+    f = interpolate.interp2d(x, y, z, kind='linear')
+    n_points = 100
+
+    # Cria um array ordenado igualmente espaçado de tamanho = n_points no intervalo [menor valor(x), maior valor(x)]
+    x_new = np.linspace(start=min(x), stop=max(x), num=n_points)
+
+    # Cria um array ordenado igualmente espaçado de tamanho = n_points no intervalo [menor valor(y), maior valor(y)]
+    y_new = np.linspace(start=min(y), stop=max(y), num=n_points)
+
+    # Obtém os pontos de z através da função interpolada e dos pontos coordenados criados por x_new e y_new
+    z_new = f(x_new, y_new)
+
+    XX_new, YY_new = np.meshgrid(x_new, y_new)
+
+    fig = plotly.subplots.make_subplots(rows=1, cols=2,
+                                        specs=[[{'type': 'surface'}, {'type': 'heatmap'}]])
+
+    fig.add_trace(go.Surface(x=XX_new, y=YY_new, z=z_new, colorscale=c), row=1, col=1)
+    fig.update_traces(contours_z=dict(show=True, usecolormap=True, highlightcolor="limegreen", project_z=True))
+
+    if (smooth):
+        fig.add_trace(go.Heatmap(x=x_new, y=y_new, z=z_new, colorscale=c, showscale=False, zsmooth='best', connectgaps=True),
+                      row=1, col=2)
+    else:
+        fig.add_trace(go.Contour(x=x_new, y=y_new, z=z_new, colorscale=c, showscale=False, line_width=0), row=1, col=2)
+
+    fig.update_layout(title=title, margin=dict(l=65, r=50, b=65, t=90), height=800, width=1000)
+
+    fig.show()
+
+    end = time.time()
+    print("Tempo de execução: {}".format(end - begin))
+
+
 
 def plot_window_plotly(x, y, z, c1='blues', c2='jet', smooth=True, title='Graph'):
     from PyQt5.QtCore import QUrl
