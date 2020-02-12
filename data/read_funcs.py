@@ -1,10 +1,11 @@
 import numpy as np
+import pylab as plt
 
 
 ### Lê dados de arquivos do Lucas
 def read_arq1():
 
-    with open(r'C:\Users\gabriel.garrido\PycharmProjects\PLOT3D_LNDC\data\dados_lucas\EstudoAntigo2_difAmpZ.txt', 'r') as in_file:
+    with open(r'data/dados_lucas/EstudoAntigo2_difAmpZ.txt', 'r') as in_file:
         cabecalho = 15
         data_array = []
 
@@ -44,7 +45,7 @@ def read_arq2():
     data_arrayPM = np.ndarray([10201, 1])
 
     # Leitura e armazenamento dos valores de B
-    with open(r'C:\Users\gabriel.garrido\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\B_Yoke_ima_lab_V5.txt',
+    with open(r'data/dados_vitor/perm_mag/B_Yoke_ima_lab_V5.txt',
               'r') as in_file:
         # Lê as primeiras nove linhas de comentários e ignora
         for linha in range(9):
@@ -58,7 +59,7 @@ def read_arq2():
         data_arrayB = np.array(data_arrayB, dtype='float')
 
     # Leitura e armazenamento dos valores de H
-    with open(r'C:\Users\gabriel.garrido\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\H_Yoke_ima_lab_V5.txt',
+    with open(r'data/dados_vitor/perm_mag/H_Yoke_ima_lab_V5.txt',
               'r') as in_file:
         # Lê as primeiras nove linhas de comentários e ignora
         for linha in range(9):
@@ -85,7 +86,11 @@ def read_arq2():
 def read_arq3():
     data_arrayB = []
 
-    with open(r'C:\Users\gabriel.garrido\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\B_Yoke_ima_lab_V5.txt', 'r') as in_file:
+    with open(r'data/dados_vitor/perm_mag/B_valores.txt', 'r') as in_file:
+        # Lê as primeiras nove linhas de comentários e ignora
+        for linha in range(9):
+            in_file.readline()
+
         for linha in in_file:
             string_data = linha.split()
             values_data = [float(v) for v in string_data]
@@ -93,7 +98,7 @@ def read_arq3():
 
         data_arrayB = np.array(data_arrayB, dtype='float')
         aux = data_arrayB
-        data_arrayB = data_arrayB[:, 0:2] * 10E2
+        data_arrayB = data_arrayB[:, 0:2]
 
         x = data_arrayB[:, 0]
         y = data_arrayB[:, 1]
@@ -101,11 +106,16 @@ def read_arq3():
 
         return x, y, z
 
+
 ### Lê dados de arquivos do Vitor - H
 def read_arq4():
     data_arrayH = []
 
-    with open(r'C:\Users\gabriel.garrido\PycharmProjects\PLOT3D_LNDC\data\dados_vitor\perm_mag\H_Yoke_ima_lab_V5.txt', 'r') as in_file:
+    with open(r'data/dados_vitor/perm_mag/H_Yoke_ima_lab_V5.txt', 'r') as in_file:
+        # Lê as primeiras nove linhas de comentários e ignora
+        for linha in range(9):
+            in_file.readline()
+
         for linha in in_file:
             string_data = linha.split()
             values_data = [float(v) for v in string_data]
@@ -113,7 +123,7 @@ def read_arq4():
 
         data_arrayH = np.array(data_arrayH, dtype='float')
         aux = data_arrayH
-        data_arrayH = data_arrayH[:, 0:2] * 10E2
+        data_arrayH = data_arrayH[:, 0:2]
 
         x = data_arrayH[:, 0]
         y = data_arrayH[:, 1]
