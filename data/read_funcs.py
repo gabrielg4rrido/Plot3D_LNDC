@@ -1,14 +1,15 @@
 import numpy as np
-import pylab as plt
+from scipy.constants import mu_0 #Constante magnética
 
 
 ### Lê dados de arquivos do Lucas
-def read_arq1():
+def read_dif_amp():
 
     with open(r'data/dados_lucas/EstudoAntigo2_difAmpZ.txt', 'r') as in_file:
         cabecalho = 15
         data_array = []
 
+        # Ignora as linhas de cabeçalho
         for i in range(cabecalho):
             if i == 8:
                 rot_line = in_file.readline()
@@ -21,6 +22,7 @@ def read_arq1():
             else:
                 aux = in_file.readline()
 
+        # Lê os valores do arquivo e converte de string pra float
         for line in in_file:
             string_data = line.split(';')
             values_data = [float(v) for v in string_data]
@@ -36,7 +38,8 @@ def read_arq1():
 
 
 ### Lê dados de arquivos do Vitor - B/H
-def read_arq2():
+def read_b_h():
+
     # Listas onde os valores de B e H serão armazenados como strings, convertidos em float e a lista se tornará um NumpyArray
     data_arrayB = []
     data_arrayH = []
@@ -51,6 +54,7 @@ def read_arq2():
         for linha in range(9):
             in_file.readline()
 
+        # Lê os valores do arquivo e converte de string pra float
         for linha in in_file:
             string_data = linha.split()
             values_data = [float(v) for v in string_data]
@@ -65,6 +69,7 @@ def read_arq2():
         for linha in range(9):
             in_file.readline()
 
+        # Lê os valores do arquivo e converte de string pra float
         for linha in in_file:
             string_data = linha.split()
             values_data = [float(v) for v in string_data]
@@ -77,56 +82,114 @@ def read_arq2():
         data_arrayPM[i][0] = data_arrayB[i][2] / data_arrayH[i][2]
 
     for i in range(len(data_arrayPM)):
-        data_arrayPM[i][0] /= 4 * np.pi * 10E-7
+        data_arrayPM[i][0] /= mu_0
 
     return data_arrayB * 10E2, data_arrayPM
 
 
-### Lê dados de arquivos do Vitor - B
-def read_arq3():
-    data_arrayB = []
+### Lê dados de arquivos do Vitor - B ou H
+def read_unique(choose_file='b'):
+    data_array = []
+    choose_file = choose_file.lower()
 
-    with open(r'data/dados_vitor/perm_mag/B_valores.txt', 'r') as in_file:
-        # Lê as primeiras nove linhas de comentários e ignora
-        for linha in range(9):
-            in_file.readline()
+    # Se o argumento for = B, lê o arquivo de B
+    # Se o argumento for = H, lê o arquivo de H
+    if choose_file == 'b':
+        with open(r'data/dados_vitor/perm_mag/B_valores.txt', 'r') as in_file:
+            # Lê as primeiras nove linhas de comentários e ignora
+            for linha in range(9):
+                in_file.readline()
 
-        for linha in in_file:
-            string_data = linha.split()
-            values_data = [float(v) for v in string_data]
-            data_arrayB.append(values_data)
+            # Lê os valores do arquivo e converte de string pra float
+            for linha in in_file:
+                string_data = linha.split()
+                values_data = [float(v) for v in string_data]
+                data_array.append(values_data)
 
-        data_arrayB = np.array(data_arrayB, dtype='float')
-        aux = data_arrayB
-        data_arrayB = data_arrayB[:, 0:2]
+            data_array = np.array(data_array, dtype='float')
+            aux = data_array
+            data_array = data_array[:, 0:2]
 
-        x = data_arrayB[:, 0]
-        y = data_arrayB[:, 1]
-        z = aux[:, 2]
+            x = data_array[:, 0];
+            y = data_array[:, 1];
+            z = aux[:, 2]
 
-        return x, y, z
+            return x, y, z
+
+    elif choose_file == 'h':
+        with open(r'data/dados_vitor/perm_mag/H_Yoke_ima_lab_V5.txt', 'r') as in_file:
+            # Lê as primeiras nove linhas de comentários e ignora
+            for linha in range(9):
+                in_file.readline()
+
+            # Lê os valores do arquivo e converte de string pra float
+            for linha in in_file:
+                string_data = linha.split()
+                values_data = [float(v) for v in string_data]
+                data_array.append(values_data)
+
+            data_array = np.array(data_array, dtype='float')
+            aux = data_array
+            data_array = data_array[:, 0:2]
+
+            x = data_array[:, 0]; y = data_array[:, 1]; z = aux[:, 2]
+
+            return x, y, z
+    else:
+        pass
 
 
-### Lê dados de arquivos do Vitor - H
-def read_arq4():
-    data_arrayH = []
+def read_csv():
+    import csv
+    data_array = []
 
-    with open(r'data/dados_vitor/perm_mag/H_Yoke_ima_lab_V5.txt', 'r') as in_file:
-        # Lê as primeiras nove linhas de comentários e ignora
-        for linha in range(9):
-            in_file.readline()
+    with open ('data/dados_vitor/perm_mag/Plano_Campo_B.csv') as csvfile:
 
-        for linha in in_file:
-            string_data = linha.split()
-            values_data = [float(v) for v in string_data]
-            data_arrayH.append(values_data)
+        #Armazena os valores do  arquivo CSV num array de strings
+        string_data = [linha for linha in csv.reader(csvfile)]
 
-        data_arrayH = np.array(data_arrayH, dtype='float')
-        aux = data_arrayH
-        data_arrayH = data_arrayH[:, 0:2]
+        # Lê os valores do arquivo e converte de string pra float
+        for linha in string_data:
+            values_data = [float(x) for x in linha]
+            data_array.append(values_data)
 
-        x = data_arrayH[:, 0]
-        y = data_arrayH[:, 1]
-        z = aux[:, 2]
+        data_array = np.array(data_array, dtype='float')
 
-        return x, y, z
+        return data_array
+
+
+def get_h_values():
+    """
+        Cria uma função que calcula o valor de H através do polinômio do terceiro grau usando valores de B como X.
+            :return: Array com valores de H.
+        """
+
+    # Recebe os valores de B através da função read_csv() e cria um array onde serão armazenados os valores de H
+    data_arrayB = read_csv()
+    data_arrayB = data_arrayB[:, 3]
+    data_arrayH = np.ndarray([len(data_arrayB)])
+
+    for i in range (len(data_arrayB)):
+        B = data_arrayB[i]
+        data_arrayH[i] = (41132 * B**3) - (111820 * B**2) + (251419 * B) - 5206.5 # Função que calcula H
+
+    data_arrayH = np.array(data_arrayH, dtype='float')
+
+    return data_arrayH
+
+def get_relative_perm_mag():
+    #Recebe os valores de B e H através das funções read_csv() e get_h_values() respectivamente
+    data_arrayB = read_csv() ; data_arrayB = data_arrayB[:, 3]
+    data_arrayH = get_h_values()
+    data_arrayPM = np.ndarray([len(data_arrayB)])
+
+    # Calcula o valor de PM = B/H
+    for i in range(len(data_arrayB)):
+        data_arrayPM[i] = data_arrayB[i] / data_arrayH[i]
+
+    # Calcula a PM relativa dividindo os valores de PM pela constante magnética u0,
+    for i in range(len(data_arrayPM)):
+        data_arrayPM[i] /= mu_0
+
+    print(data_arrayPM)
+

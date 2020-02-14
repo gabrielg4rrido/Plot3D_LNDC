@@ -1,15 +1,14 @@
 from pylab import rcParams
 import matplotlib.pyplot as plt
 import plotly.graph_objs as go
-import plotly.subplots
 from scipy import interpolate
 import numpy as np
 import time
-import sys, os
-import plotly.offline
 import matplotlib
 import mpl_toolkits.mplot3d
-
+import sys, os
+import plotly.offline
+import plotly.subplots
 
 def plot_matplot(x, y, z, graph_title='Graph', interp_type='quintic'):
     """
@@ -90,17 +89,18 @@ def plot_plotly(x, y, z, c='jet', smooth=True, title='Graph'):
 
     XX_new, YY_new = np.meshgrid(x_new, y_new)
 
-    """
-        fig = plotly.subplots.make_subplots(rows=1, cols=2, specs=[[{'type': 'surface'}, {'type': 'heatmap'}]])
-        fig.add_trace(go.Surface(x=XX_new, y=YY_new, z=z_new, colorscale=c), row=1, col=1)
-        fig.update_traces(contours_z=dict(show=True, usecolormap=True, highlightcolor="limegreen", project_z=True))
-    """
+
+    fig = plotly.subplots.make_subplots(rows=1, cols=2, specs=[[{'type': 'surface'}, {'type': 'heatmap'}]])
+    fig.add_trace(go.Surface(x=XX_new, y=YY_new, z=z_new, colorscale=c), row=1, col=1)
+    fig.update_traces(contours_z=dict(show=True, usecolormap=True, highlightcolor="limegreen", project_z=True))
+
 
     if (smooth):
-        fig = go.Figure(data=go.Heatmap(x=x_new, y=y_new, z=z_new, colorbar=dict(
-                                        lenmode='fraction', len=2, thickness=20), colorscale=c, showscale=True, zsmooth='best', connectgaps=True))
+        fig.add_trace(go.Heatmap(x=x_new, y=y_new, z=z_new, colorbar=dict(
+                                        lenmode='fraction', len=2, thickness=20), colorscale=c, showscale=True, zsmooth='best', connectgaps=True),
+                      row=1, col=2)
     else:
-        fig = go.Figure(data=go.Contour(x=x_new, y=y_new, z=z_new, colorscale=c, showscale=False, line_width=0))
+        fig.add_trace(go.Contour(x=x_new, y=y_new, z=z_new, colorscale=c, showscale=False, line_width=0), row=1, col=2)
 
     fig.update_layout(title=title, margin=dict(l=65, r=50, b=65, t=90), height=300, width=1250)
 
@@ -108,3 +108,11 @@ def plot_plotly(x, y, z, c='jet', smooth=True, title='Graph'):
 
     end = time.time()
     print("Tempo de execução: {}".format(end - begin))
+
+
+def plot_3d_interp(points, data):
+    RGI = interpolate.RegularGridInterpolator
+
+    x = points[:, 0]; y = points[:, 1], z = points[:, 2]
+    RGI = RGI(points=[x, y, z], values=data)
+
