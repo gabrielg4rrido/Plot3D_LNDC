@@ -95,7 +95,7 @@ def read_unique(choose_file='b'):
     # Se o argumento for = B, lê o arquivo de B
     # Se o argumento for = H, lê o arquivo de H
     if choose_file == 'b':
-        with open(r'data/dados_vitor/perm_mag/B_valores.txt', 'r') as in_file:
+        with open(r'data/dados_vitor/perm_mag/dados_yoke_ima_lab/B_Yoke_ima_lab_V5_2.txt', 'r') as in_file:
             # Lê as primeiras nove linhas de comentários e ignora
             for linha in range(9):
                 in_file.readline()
@@ -143,7 +143,7 @@ def read_csv():
     import csv
     data_array = []
 
-    with open ('data/dados_vitor/perm_mag/Plano_Campo_B.csv') as csvfile:
+    with open ('data/dados_vitor/perm_mag/dados_plano_campo_b/Plano_Campo_B.csv') as csvfile:
 
         #Armazena os valores do  arquivo CSV num array de strings
         string_data = [linha for linha in csv.reader(csvfile)]
@@ -171,10 +171,11 @@ def get_h_values():
 
     for i in range (len(data_arrayB)):
         B = data_arrayB[i]
-        data_arrayH[i] = (41132 * B**3) - (111820 * B**2) + (251419 * B) - 5206.5 # Função que calcula H
+        data_arrayH[i] = (411132 * B**3) - (111820 * B**2) + (251419 * B) - 5206.5 # Função que calcula H
 
     data_arrayH = np.array(data_arrayH, dtype='float')
 
+    np.savetxt('data/dados_vitor/perm_mag/dados_plano_campo_b/Resultados_H.txt', data_arrayH, newline='\n')
     return data_arrayH
 
 def get_relative_perm_mag():
@@ -187,9 +188,10 @@ def get_relative_perm_mag():
     for i in range(len(data_arrayB)):
         data_arrayPM[i] = data_arrayB[i] / data_arrayH[i]
 
-    # Calcula a PM relativa dividindo os valores de PM pela constante magnética u0,
+    # Calcula a PM relativa dividindo os valores de PM pela constante magnética u0
     for i in range(len(data_arrayPM)):
         data_arrayPM[i] /= mu_0
 
-    print(data_arrayPM)
+    np.savetxt('data/dados_vitor/perm_mag/dados_plano_campo_b/Resultados_PM.txt', data_arrayPM, newline='\n')
 
+    return data_arrayPM
